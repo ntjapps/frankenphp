@@ -68,6 +68,5 @@ RUN install-php-extensions \
     zlib \
     && \
 # Test if PHP is working
-    apt-get autoclean -y && \
     php -v && \
     php -m
