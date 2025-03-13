@@ -3,6 +3,9 @@ name: Container Image Build
 on:
   schedule:
     - cron: "0 0 1 * *" # Run at 00:00 on the first day of the month
+  push:
+    branches:
+      - "main"
   workflow_dispatch:
 
 env:
