@@ -32,7 +32,7 @@ ARG ORACLE_ZIP_DIR=instantclient_21_15
 ARG OCI_VERSION=3.4.0
 
 # Install Oracle Instant Client
-RUN apk add --no-cache libaio-dev libaio1 unzip && mkdir -p /usr/oracle && \
+RUN apk add --no-cache libaio-dev unzip && mkdir -p /usr/oracle && \
     curl https://download.oracle.com/otn_software/linux/instantclient/${ORACLE_SIMPLE_VERSION}/instantclient-basic-linux.x64-${ORACLE_VERSION}dbru.zip --output /usr/oracle/oic.zip && \
     curl https://download.oracle.com/otn_software/linux/instantclient/${ORACLE_SIMPLE_VERSION}/instantclient-sdk-linux.x64-${ORACLE_VERSION}dbru.zip --output /usr/oracle/sdk.zip && \
     cd /usr/oracle && \
