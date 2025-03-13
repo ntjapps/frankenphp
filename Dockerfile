@@ -65,4 +65,9 @@ RUN install-php-extensions \
     xsl \
     opcache \
     zip \
-    zlib
+    zlib \
+    && \
+# Test if PHP is working
+    apt-get autoclean -y && \
+    php -v && \
+    php -m
