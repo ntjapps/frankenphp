@@ -44,6 +44,7 @@ RUN apk add --no-cache libaio libnsl libc6-compat wget unzip && mkdir -p /usr/or
 # Install OCI8
 RUN LD_LIBRARY_PATH=/usr/oracle/${ORACLE_ZIP_DIR}:$LD_LIBRARY_PATH install-php-extensions \
     oci8 \
+    pdo_oci \
     && \
     php -v && \
     php -m
