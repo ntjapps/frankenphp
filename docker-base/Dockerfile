@@ -1,8 +1,7 @@
 FROM dunglas/frankenphp:1.4-php8.4-alpine
 
 # Install PHP Extensions
-RUN apk --no-cache add bash && \
-    install-php-extensions \
+RUN install-php-extensions \
     bcmath \
     bz2 \
     calendar \
