@@ -64,5 +64,5 @@ RUN install-php-extensions \
     xmlwriter \
     xsl \
     opcache \
-    zip
+    zip \
     zlib
