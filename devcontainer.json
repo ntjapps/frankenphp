@@ -2,7 +2,7 @@
     "customizations": {
       "codespaces": {
         "repositories": {
-          "ntj125app/stack-config": {
+          "ntjapps/stack-config": {
             "permissions": "read-all"
           }
         }

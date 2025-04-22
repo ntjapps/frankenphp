@@ -1,4 +1,4 @@
-ARG BASEIMAGE=ghcr.io/ntj125app/frankenphp:base
+ARG BASEIMAGE=ghcr.io/ntjapps/frankenphp:base
 
 # Base Image
 FROM ${BASEIMAGE} AS base
