@@ -1,12 +1,11 @@
 {
     "customizations": {
-      "codespaces": {
-        "repositories": {
-          "ntjapps/stack-config": {
-            "permissions": "read-all"
-          }
+        "codespaces": {
+            "repositories": {
+                "nathanaelytj/stack-config": {
+                    "permissions": "read-all"
+                }
+            }
         }
-      }
     }
-  }
-  
+}
