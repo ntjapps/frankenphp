@@ -10,4 +10,4 @@ License can be read in [LICENSE](https://github.com/ntjapps/frankenphp/blob/late
 
 ## Updates
 
-7 Mei 2025
+29 Nov 2025
