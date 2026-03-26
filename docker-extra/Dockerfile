@@ -32,14 +32,25 @@ ARG ORACLE_ZIP_DIR=instantclient_21_15
 ARG OCI_VERSION=3.4.0
 
 # Install Oracle Instant Client
-RUN apt-get update && apt-get install -y --no-install-recommends libaio1 libnsl2 wget unzip && rm -rf /var/lib/apt/lists/* && mkdir -p /usr/oracle && \
-    curl https://download.oracle.com/otn_software/linux/instantclient/${ORACLE_SIMPLE_VERSION}/instantclient-basic-linux.x64-${ORACLE_VERSION}dbru.zip --output /usr/oracle/oic.zip && \
-    curl https://download.oracle.com/otn_software/linux/instantclient/${ORACLE_SIMPLE_VERSION}/instantclient-sdk-linux.x64-${ORACLE_VERSION}dbru.zip --output /usr/oracle/sdk.zip && \
-    cd /usr/oracle && \
-    unzip oic.zip && \
-    unzip sdk.zip && \
-    rm -f oic.zip && \
-    rm -f sdk.zip
+RUN set -eux; \
+    apt-get update; \
+    if apt-cache show libaio1 >/dev/null 2>&1; then \
+        apt-get install -y --no-install-recommends libaio1 libnsl2 wget unzip; \
+    elif apt-cache show libaio >/dev/null 2>&1; then \
+        apt-get install -y --no-install-recommends libaio libnsl2 wget unzip; \
+    elif apt-cache show libaio-dev >/dev/null 2>&1; then \
+        apt-get install -y --no-install-recommends libaio-dev libnsl2 wget unzip; \
+    else \
+        echo 'libaio package not found in apt repos'; exit 1; \
+    fi; \
+    rm -rf /var/lib/apt/lists/*; \
+    mkdir -p /usr/oracle; \
+    curl -fL https://download.oracle.com/otn_software/linux/instantclient/${ORACLE_SIMPLE_VERSION}/instantclient-basic-linux.x64-${ORACLE_VERSION}dbru.zip --output /usr/oracle/oic.zip; \
+    curl -fL https://download.oracle.com/otn_software/linux/instantclient/${ORACLE_SIMPLE_VERSION}/instantclient-sdk-linux.x64-${ORACLE_VERSION}dbru.zip --output /usr/oracle/sdk.zip; \
+    cd /usr/oracle; \
+    unzip oic.zip; \
+    unzip sdk.zip; \
+    rm -f oic.zip sdk.zip
 
 # Install OCI8
 RUN LD_LIBRARY_PATH=/usr/oracle/${ORACLE_ZIP_DIR}:$LD_LIBRARY_PATH install-php-extensions \
