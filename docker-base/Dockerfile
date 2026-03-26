@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp:1-php8.5-alpine
+FROM dunglas/frankenphp:1-php8.5
 
 # Install PHP Extensions
 RUN install-php-extensions \
