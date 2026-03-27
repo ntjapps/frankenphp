@@ -3,31 +3,22 @@ FROM dunglas/frankenphp:1-php8.5
 # Install PHP Extensions
 RUN install-php-extensions \
     bcmath \
-    bz2 \
-    calendar \
     core \
     ctype \
     curl \
     date \
     dom \
-    enchant \
-    excimer \
     exif \
     fileinfo \
     filter \
-    ftp \
     gd \
-    gettext \
     gmp \
     hash \
     iconv \
-    imap \
     intl \
     json \
-    ldap \
     libxml \
     mbstring \
-    memcached \
     mongodb \
     mysqli \
     mysqlnd \
@@ -35,34 +26,25 @@ RUN install-php-extensions \
     pcntl \
     pcre \
     pdo \
-    pdo_dblib \
     pdo_mysql \
     pdo_pgsql \
     pdo_sqlite \
     pgsql \
     phar \
     posix \
-    pspell \
     random \
-    readline \
     redis \
     reflection \
     session \
     simplexml \
-    snmp \
-    soap \
     sockets \
     sodium \
     sqlite3 \
     standard \
-    sysvmsg \
-    sysvsem \
-    tidy \
     tokenizer \
     xml \
     xmlreader \
     xmlwriter \
-    xsl \
     opcache \
     zip \
     zlib \
