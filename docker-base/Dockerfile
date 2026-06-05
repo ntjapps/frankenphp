@@ -65,7 +65,7 @@ RUN set -eux; \
     cd /usr/src/php; \
     gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)"; \
     debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)"; \
-    if [ ! -d /usr/include/curl ]; then \
+    if [ ! -d /usr/include/curl ] && [ ! -e /usr/local/include/curl ]; then \
         ln -sT "/usr/include/$debMultiarch/curl" /usr/local/include/curl; \
     fi; \
     export \
