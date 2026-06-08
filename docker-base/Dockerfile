@@ -109,6 +109,14 @@ RUN set -eux; \
 # The dunglas/frankenphp:builder image ships Go source at /go/src/app.
 # xcaddy is copied from the official caddy builder image.
 # We link against the new libphp installed in stage 1 (/usr/local/lib/libphp.so).
+#
+# IMPORTANT: rebuilding the binary with xcaddy only bakes in the modules listed
+# below — it does NOT inherit the modules compiled into the stock
+# dunglas/frankenphp binary. The stock binary ships the Brotli encoder
+# (caddy-cbrotli), which Laravel Octane's Caddyfile requires via
+# `encode zstd br gzip`. Omitting it makes Caddy fail config adaptation with
+# "module not registered: http.encoders.br" and the server crash-loops on boot.
+# Keep --with github.com/dunglas/caddy-cbrotli in sync with upstream frankenphp.
 # =============================================================================
 FROM php-recompile AS frankenphp-build
 
@@ -127,7 +135,8 @@ RUN set -eux; \
         --with github.com/dunglas/frankenphp=/go/src/app/ \
         --with github.com/dunglas/frankenphp/caddy=/go/src/app/caddy/ \
         --with github.com/dunglas/mercure/caddy \
-        --with github.com/dunglas/vulcain/caddy; \
+        --with github.com/dunglas/vulcain/caddy \
+        --with github.com/dunglas/caddy-cbrotli; \
     setcap cap_net_bind_service=+ep /usr/local/bin/frankenphp; \
     frankenphp version
 
