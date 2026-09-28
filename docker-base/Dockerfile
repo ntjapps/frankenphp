@@ -125,7 +125,10 @@ ARG FD_SETSIZE=8192
 
 COPY --from=caddy:builder /usr/bin/xcaddy /usr/bin/xcaddy
 
+# GOTOOLCHAIN=auto: the builder image's Go can lag behind what the unpinned
+# modules require (mercure/caddy v1.0.2 needs go >= 1.27), so let Go fetch it.
 RUN set -eux; \
+    GOTOOLCHAIN=auto \
     CGO_ENABLED=1 \
     XCADDY_SETCAP=1 \
     CGO_CFLAGS="-DFD_SETSIZE=${FD_SETSIZE} $(php-config --includes)" \
