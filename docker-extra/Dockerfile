@@ -26,10 +26,10 @@ RUN install-php-extensions \
 # Target Image
 FROM base AS oci
 
-ARG ORACLE_VERSION=21.15.0.0.0
-ARG ORACLE_SIMPLE_VERSION=2115000
-ARG ORACLE_ZIP_DIR=instantclient_21_15
-ARG OCI_VERSION=3.4.0
+ARG ORACLE_VERSION=21.23.0.0.0
+ARG ORACLE_SIMPLE_VERSION=2123000
+ARG ORACLE_ZIP_DIR=instantclient_21_23
+ARG OCI_VERSION=3.4.1
 
 # Install Oracle Instant Client
 RUN set -eux; \
@@ -48,8 +48,8 @@ RUN set -eux; \
     curl -fL https://download.oracle.com/otn_software/linux/instantclient/${ORACLE_SIMPLE_VERSION}/instantclient-basic-linux.x64-${ORACLE_VERSION}dbru.zip --output /usr/oracle/oic.zip; \
     curl -fL https://download.oracle.com/otn_software/linux/instantclient/${ORACLE_SIMPLE_VERSION}/instantclient-sdk-linux.x64-${ORACLE_VERSION}dbru.zip --output /usr/oracle/sdk.zip; \
     cd /usr/oracle; \
-    unzip oic.zip; \
-    unzip sdk.zip; \
+    unzip -o oic.zip; \
+    unzip -o sdk.zip; \
     rm -f oic.zip sdk.zip
 
 # Install OCI8
