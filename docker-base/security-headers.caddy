@@ -1,0 +1,15 @@
+# Site-wide security headers, imported into the Laravel Octane site block via
+# CADDY_SERVER_EXTRA_DIRECTIVES (apps forward it through config/octane.php
+# `caddy.env`). HSTS is deliberately absent: Cloudflare sets it at the edge.
+# `?` only sets a header the app has not already set, so per-route headers
+# (e.g. the stricter CSP on the OAuth consent screen) still win.
+header {
+	?X-Content-Type-Options "nosniff"
+	?X-Frame-Options "SAMEORIGIN"
+	?Referrer-Policy "strict-origin-when-cross-origin"
+	?Permissions-Policy "camera=(self), microphone=(self), geolocation=(self), payment=(self), usb=(), interest-cohort=()"
+	?Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https: wss:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
+	-Server
+	-X-Powered-By
+	defer
+}
