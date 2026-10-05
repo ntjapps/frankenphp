@@ -211,3 +211,7 @@ RUN install-php-extensions \
 # Test if PHP is working
     php -v && \
     php -m
+
+# Site-wide security headers for Octane apps (see security-headers.caddy).
+COPY ./security-headers.caddy /etc/frankenphp/security-headers.caddy
+ENV CADDY_SERVER_EXTRA_DIRECTIVES="import /etc/frankenphp/security-headers.caddy"
