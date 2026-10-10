@@ -13,3 +13,10 @@ header {
 	-X-Powered-By
 	defer
 }
+
+# Inbound WhatsApp media is sender-controlled content on the public disk. It is served
+# only by the app's authenticated download route (whatsapp-media-download), never as a
+# static file under /storage: answer 404 here, before php_server can serve the symlinked
+# file. The regexp tolerates doubled slashes and any case.
+@whatsappMedia path_regexp (?i)^/+storage/+whatsapp-media(/|$)
+respond @whatsappMedia 404
