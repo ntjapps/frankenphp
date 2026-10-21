@@ -159,6 +159,23 @@ RUN setcap cap_net_bind_service=+ep /usr/local/bin/frankenphp && \
     ldconfig && \
     frankenphp version
 
+# Make install-php-extensions retry: pecl.php.net returns intermittent 504s
+# (e.g. 2026-10-21), which used to fail the whole build on one download.
+# The wrapper is kept in the image, so docker-extra (pcov/xdebug/oci8) and any
+# image built FROM this one retry too. 4 attempts, 20/40/60 s apart.
+RUN set -eux; \
+    mv /usr/local/bin/install-php-extensions /usr/local/bin/install-php-extensions.real; \
+    printf '%s\n' \
+      '#!/bin/sh' \
+      'n=1' \
+      'while :; do' \
+      '  /usr/local/bin/install-php-extensions.real "$@" && exit 0' \
+      '  [ "$n" -ge 4 ] && exit 1' \
+      '  echo "install-php-extensions failed (attempt $n), retrying in $((n * 20))s" >&2' \
+      '  sleep $((n * 20)); n=$((n + 1))' \
+      'done' > /usr/local/bin/install-php-extensions; \
+    chmod 755 /usr/local/bin/install-php-extensions
+
 # Install PHP Extensions (unchanged from original)
 RUN install-php-extensions \
     bcmath \
