@@ -16,8 +16,8 @@ FROM dunglas/frankenphp:1-builder-php8.5 AS php-recompile
 
 # PHP version must match the prebuilt binary in the base image exactly.
 # Update this ARG when bumping the base image tag.
-ARG PHP_VERSION=8.5.11
-ARG PHP_SHA256="d9be75c08e8c316f4c8f4194d8fbe1750a15f6a6d9d4e3fe72082abeeb800360"
+ARG PHP_VERSION=8.5.12
+ARG PHP_SHA256="08bc2eba2a588654ade1357174aa646b761556c862dda0678345ee29ed481209"
 
 # FD_SETSIZE value. 8192 is large enough for high-concurrency FrankenPHP worker
 # deployments while staying well within kernel ulimit defaults.
