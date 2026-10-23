@@ -229,6 +229,8 @@ RUN install-php-extensions \
     php -v && \
     php -m
 
-# Site-wide security headers for Octane apps (see security-headers.caddy).
+# Site-wide security headers and path filtering for Octane apps (see security-headers.caddy,
+# which imports path-filter.caddy).
 COPY ./security-headers.caddy /etc/frankenphp/security-headers.caddy
+COPY ./path-filter.caddy /etc/frankenphp/path-filter.caddy
 ENV CADDY_SERVER_EXTRA_DIRECTIVES="import /etc/frankenphp/security-headers.caddy"
