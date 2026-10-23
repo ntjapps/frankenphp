@@ -1,0 +1,59 @@
+# Path filtering for Laravel Octane sites, imported by security-headers.caddy (so it is
+# evaluated inside the Octane `route { ... }` block, in the order written, i.e. BEFORE
+# `php_server` and after the security `header` block, so the 404s still carry the headers).
+#
+# Why: Octane's Caddyfile uses `php_server { try_files {path} frankenphp-worker.php }`, so
+# any existing `*.php` file under public/ (including through the public/storage symlink)
+# is executed, and dotfiles are served as static files. Everything below answers 404
+# (not 403, so a scanner cannot tell a blocked path from a missing one).
+#
+# Rules:
+#   1. dotfiles / dot-directories (/.env, /.git/..., /.htaccess, /a/.hidden), except
+#      /.well-known/ (ACME, assetlinks.json, apple-app-site-association, OAuth metadata).
+#      A dot segment inside /.well-known/ (e.g. /.well-known/../.env) is still blocked.
+#   2. PHP-like files (.php .phtml .phar .phps .inc .php5 ...) under /storage/ and /vendor/,
+#      always, whatever the override below says. Also /cgi-bin/.
+#   3. Any other PHP request except the front controller. Allowed entry point regexp:
+#      CADDY_PHP_ENTRYPOINT (default: /index.php, with or without PATH_INFO). frankenphp-worker.php
+#      is NOT requested by path: php_server reaches it through its internal try_files rewrite,
+#      which happens after this block.
+#   4. Build/dependency/backup files that never belong in a docroot (composer.json/lock,
+#      package.json, installed.json, *.sql *.bak *.old *.orig *.swp *.log, ...). NOTE: published
+#      package assets under /vendor/ (e.g. /vendor/horizon/app.js) are NOT blocked, only
+#      the listed file names/extensions are.
+#
+# Overrides (container env, read when Caddy loads the config):
+#   CADDY_PHP_ENTRYPOINT   regexp of the allowed PHP entry point(s). Set to `.*` to allow any
+#                          PHP file outside /storage/ and /vendor/ (legacy multi-file app).
+#   CADDY_MAX_REQUEST_BODY max request body (Caddy size, e.g. 256MB). Default 128MB. There
+#                          is no "off": use a large value such as 100GB. Do not set it empty.
+
+@blockedDotPaths {
+	path_regexp ^(.*/)?\.
+	not {
+		path_regexp ^/\.well-known(/|$)
+		not path_regexp ^/\.well-known/(.*/)?\.
+	}
+}
+respond @blockedDotPaths 404
+
+@blockedDataScripts path_regexp (?i)^/+(storage|vendor)/.*\.(php[0-9]?|phtml|phar|phps|inc)(/|$)
+respond @blockedDataScripts 404
+
+@blockedCgi path_regexp (?i)^/+cgi-bin(/|$)
+respond @blockedCgi 404
+
+@blockedPhp {
+	path_regexp (?i)\.(php[0-9]?|phtml|phar|phps|inc)(/|$)
+	not path_regexp phpEntry {$CADDY_PHP_ENTRYPOINT:^/+index\.php(/|$)}
+}
+respond @blockedPhp 404
+
+@blockedFiles path_regexp (?i)(^|/)(composer\.(json|lock)|package(-lock)?\.json|installed\.json|artisan|Dockerfile[^/]*|docker-compose[^/]*)$|\.(sql|bak|old|orig|swp|log|sh|ini)$
+respond @blockedFiles 404
+
+# Cap request bodies before they reach PHP. Caddy has no limit by default. 128MB covers the
+# largest app upload (seefin entity import: PHP post_max_size 105M).
+request_body {
+	max_size {$CADDY_MAX_REQUEST_BODY:128MB}
+}
