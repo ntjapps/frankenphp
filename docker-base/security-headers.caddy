@@ -20,3 +20,6 @@ header {
 # file. The regexp tolerates doubled slashes and any case.
 @whatsappMedia path_regexp (?i)^/+storage/+whatsapp-media(/|$)
 respond @whatsappMedia 404
+
+# Dotfile / PHP-execution / sensitive-path filtering and request body cap (see path-filter.caddy).
+import /etc/frankenphp/path-filter.caddy
