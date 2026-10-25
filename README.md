@@ -51,6 +51,12 @@ tests/test-paths.sh                  # IMAGE=ghcr.io/ntjapps/frankenphp:latest b
 IMAGE=my/image:tag tests/test-paths.sh
 ```
 
+## Releases and tags
+
+- No version tags for routine releases; do not create `v*` tags here. Images are published by dispatching the build workflows on the default branch `latest`, only when the owner asks. Every workflow is manual-only because CI costs money.
+- Order: `image-base-build.yaml` first (it publishes `:base`), then `image-build.yaml` (the variants build on `:base`).
+- Floating tags (`latest`, `base`, the per-variant tags) are published only from `latest` or a `v*` tag ref; any other ref (for example `dev` or a feature branch) gets `branch-<name>-*` tags only.
+
 ## Updates
 
 28 Sep 2026
