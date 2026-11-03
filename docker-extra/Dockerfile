@@ -104,3 +104,15 @@ RUN install-php-extensions \
     php -v && \
     php -m && \
     php -r 'exit(function_exists("ldap_connect") ? 0 : 1);'
+
+# Target Image
+# LDAP on top of the Oracle image, for applications that need both.
+FROM oci AS ldap-oci
+
+# Install LDAP (install-php-extensions pulls the libldap runtime library)
+RUN install-php-extensions \
+    ldap \
+    && \
+    php -v && \
+    php -m && \
+    php -r 'exit(function_exists("ldap_connect") && function_exists("oci_connect") ? 0 : 1);'

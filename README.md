@@ -61,6 +61,7 @@ Built by `image-build.yaml` from [`docker-extra/Dockerfile`](docker-extra/Docker
 | `pcov`, `xdebug` | Coverage / debugging |
 | `oci`, `oci-pcov`, `oci-xdebug` | Oracle Instant Client + `oci8`, `pdo_oci` |
 | `ldap` | The `ldap` extension (and the libldap runtime), only for applications that need LDAP; everything else stays on `latest` |
+| `ldap-oci` | `oci` + the `ldap` extension, for applications that need both |
 
 ## Releases and tags
 
