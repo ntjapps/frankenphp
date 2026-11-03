@@ -152,7 +152,7 @@ jobs:
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           path: ${{ runner.temp }}/digests
-          pattern: digests-build-extra-${{ matrix.php_extensions.name }}-*
+          pattern: digests-build-extra-${{ matrix.php_extensions.name }}-linux-*
           merge-multiple: true
       - name: Login to Container Registry
         uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
