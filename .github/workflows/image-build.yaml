@@ -44,6 +44,8 @@ jobs:
             experimental: true
           - name: "oci-pcov"
             experimental: true
+          - name: "ldap"
+            experimental: true
 
       fail-fast: false
     steps:
@@ -137,6 +139,8 @@ jobs:
           - name: "oci-xdebug"
             experimental: true
           - name: "oci-pcov"
+            experimental: true
+          - name: "ldap"
             experimental: true
 
     steps:

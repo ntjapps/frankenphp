@@ -51,6 +51,17 @@ tests/test-paths.sh                  # IMAGE=ghcr.io/ntjapps/frankenphp:latest b
 IMAGE=my/image:tag tests/test-paths.sh
 ```
 
+## Image tags
+
+Built by `image-build.yaml` from [`docker-extra/Dockerfile`](docker-extra/Dockerfile), each on top of `:base` (amd64 + arm64):
+
+| Tag | Adds |
+| --- | --- |
+| `latest` / `base` | The standard extension set (see [`docker-base/Dockerfile`](docker-base/Dockerfile)) |
+| `pcov`, `xdebug` | Coverage / debugging |
+| `oci`, `oci-pcov`, `oci-xdebug` | Oracle Instant Client + `oci8`, `pdo_oci` |
+| `ldap` | The `ldap` extension (and the libldap runtime), only for applications that need LDAP; everything else stays on `latest` |
+
 ## Releases and tags
 
 - No version tags for routine releases; do not create `v*` tags here. Images are published by dispatching the build workflows on the default branch `latest`, only when the owner asks. Every workflow is manual-only because CI costs money.
