@@ -26,9 +26,9 @@ RUN install-php-extensions \
 # Target Image
 FROM base AS oci
 
-ARG ORACLE_VERSION=21.23.0.0.0
-ARG ORACLE_SIMPLE_VERSION=2123000
-ARG ORACLE_ZIP_DIR=instantclient_21_23
+ARG ORACLE_VERSION=21.24.0.0.0
+ARG ORACLE_SIMPLE_VERSION=2124000
+ARG ORACLE_ZIP_DIR=instantclient_21_24
 # Instant Client 21 has no Linux arm64 build; arm64 images get 19.x, the
 # newest line Oracle ships for aarch64. /usr/oracle/instantclient points at
 # whichever one was installed.
