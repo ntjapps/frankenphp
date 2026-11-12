@@ -28,9 +28,9 @@ jobs:
       matrix:
         arch:
           - platform: linux/amd64
-            runner: blacksmith-2vcpu-ubuntu-2404
+            runner: ubuntu-24.04
           - platform: linux/arm64
-            runner: blacksmith-2vcpu-ubuntu-2404-arm
+            runner: ubuntu-24.04-arm
         php_extensions:
           - name: "base"
             experimental: false
@@ -120,7 +120,7 @@ jobs:
           if-no-files-found: error
           retention-days: 1
   build-extra-merge:
-    runs-on: blacksmith-2vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     needs: build-extra
     permissions:
       contents: read
