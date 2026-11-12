@@ -12,7 +12,9 @@
 # the official php:8.5-zts-bookworm base image. This stage recompiles PHP from
 # source with -DFD_SETSIZE=8192 and rebuilds the frankenphp binary against it.
 # =============================================================================
-FROM dunglas/frankenphp:1-builder-php8.5 AS php-recompile
+# Base images are pinned by digest (multi-arch index digests; `docker buildx imagetools inspect <image>`, copy the top-level
+# "Digest:"). Dependabot (docker, target dev) opens PRs when they move. Keep builder, runtime and PHP_VERSION in step.
+FROM dunglas/frankenphp:1-builder-php8.5@sha256:03689f65a8c0977115e2bc5aff0c82db4c9a269a73528ebbbb069a79c706767b AS php-recompile
 
 # PHP version must match the prebuilt binary in the base image exactly.
 # Update this ARG when bumping the base image tag.
@@ -123,10 +125,10 @@ FROM php-recompile AS frankenphp-build
 # Re-declare ARG so it is visible inside this stage's RUN commands.
 ARG FD_SETSIZE=8192
 
-COPY --from=caddy:builder /usr/bin/xcaddy /usr/bin/xcaddy
+COPY --from=caddy:builder@sha256:6350162b3889ca32600b3c699c61572fa0eb3ad6b2a51874f19b158a7df77511 /usr/bin/xcaddy /usr/bin/xcaddy
 
-# GOTOOLCHAIN=auto: the builder image's Go can lag behind what the unpinned
-# modules require (mercure/caddy v1.0.2 needs go >= 1.27), so let Go fetch it.
+# GOTOOLCHAIN=auto: the builder image's Go can lag behind what the (version-pinned, bump deliberately)
+# modules require (mercure/caddy needs go >= 1.27 since v1.0.2), so let Go fetch it.
 RUN set -eux; \
     GOTOOLCHAIN=auto \
     CGO_ENABLED=1 \
@@ -137,9 +139,9 @@ RUN set -eux; \
         --output /usr/local/bin/frankenphp \
         --with github.com/dunglas/frankenphp=/go/src/app/ \
         --with github.com/dunglas/frankenphp/caddy=/go/src/app/caddy/ \
-        --with github.com/dunglas/mercure/caddy \
-        --with github.com/dunglas/vulcain/caddy \
-        --with github.com/dunglas/caddy-cbrotli; \
+        --with github.com/dunglas/mercure/caddy@v1.1.6 \
+        --with github.com/dunglas/vulcain/caddy@v1.4.6 \
+        --with github.com/dunglas/caddy-cbrotli@v1.0.1; \
     setcap cap_net_bind_service=+ep /usr/local/bin/frankenphp; \
     frankenphp version
 
@@ -147,7 +149,7 @@ RUN set -eux; \
 # Stage 3: Runtime image — standard dunglas/frankenphp with the patched binary
 #           and libphp.so replaced. PHP extensions are installed as before.
 # =============================================================================
-FROM dunglas/frankenphp:1-php8.5
+FROM dunglas/frankenphp:1-php8.5@sha256:667c5fffd348d9c3c260803d75956f1d9aace7e4b7331d8893de6f101d7e0e57
 
 # Replace the prebuilt frankenphp binary and libphp.so with the
 # FD_SETSIZE=8192 variants built in the stages above.

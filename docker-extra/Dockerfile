@@ -35,6 +35,12 @@ ARG ORACLE_ZIP_DIR=instantclient_21_24
 ARG ORACLE_ARM64_VERSION=19.32.0.0.0
 ARG ORACLE_ARM64_SIMPLE_VERSION=1932000
 ARG ORACLE_ARM64_ZIP_DIR=instantclient_19_32
+# SHA-256 of the four zips above (computed from the files download.oracle.com served on 2026-11-12, i.e. trust on first download:
+# compare with Oracle's download page when bumping). The build fails on a mismatch. Bump a version and its two hashes together, per arch.
+ARG ORACLE_BASIC_SHA256=e384447b08e8242b80b3f225703312e66c8fd522e1450c93f774b9545744d87e
+ARG ORACLE_SDK_SHA256=47224bbdc42c120528079a08e5463f3b9ab53d6dfa2626ab01fde309969ff44a
+ARG ORACLE_ARM64_BASIC_SHA256=d5b413822c6cb1a9bb5cfe83ee2a138c39e9b7a931fb9887f5c82fc67ca859ad
+ARG ORACLE_ARM64_SDK_SHA256=be3b37817943102cb051fad80f5dc821821cf1616ffd0983c2ded81621c760d3
 ARG TARGETARCH
 ARG OCI_VERSION=3.4.1
 
@@ -53,11 +59,13 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*; \
     mkdir -p /usr/oracle; \
     case "${TARGETARCH:-amd64}" in \
-        arm64) ic_arch=arm64; ic_ver=${ORACLE_ARM64_VERSION}; ic_simple=${ORACLE_ARM64_SIMPLE_VERSION}; ic_dir=${ORACLE_ARM64_ZIP_DIR} ;; \
-        *) ic_arch=x64; ic_ver=${ORACLE_VERSION}; ic_simple=${ORACLE_SIMPLE_VERSION}; ic_dir=${ORACLE_ZIP_DIR} ;; \
+        arm64) ic_arch=arm64; ic_ver=${ORACLE_ARM64_VERSION}; ic_simple=${ORACLE_ARM64_SIMPLE_VERSION}; ic_dir=${ORACLE_ARM64_ZIP_DIR}; ic_basic_sha=${ORACLE_ARM64_BASIC_SHA256}; ic_sdk_sha=${ORACLE_ARM64_SDK_SHA256} ;; \
+        *) ic_arch=x64; ic_ver=${ORACLE_VERSION}; ic_simple=${ORACLE_SIMPLE_VERSION}; ic_dir=${ORACLE_ZIP_DIR}; ic_basic_sha=${ORACLE_BASIC_SHA256}; ic_sdk_sha=${ORACLE_SDK_SHA256} ;; \
     esac; \
     curl -fL https://download.oracle.com/otn_software/linux/instantclient/${ic_simple}/instantclient-basic-linux.${ic_arch}-${ic_ver}dbru.zip --output /usr/oracle/oic.zip; \
     curl -fL https://download.oracle.com/otn_software/linux/instantclient/${ic_simple}/instantclient-sdk-linux.${ic_arch}-${ic_ver}dbru.zip --output /usr/oracle/sdk.zip; \
+    echo "${ic_basic_sha}  /usr/oracle/oic.zip" | sha256sum -c -; \
+    echo "${ic_sdk_sha}  /usr/oracle/sdk.zip" | sha256sum -c -; \
     cd /usr/oracle; \
     unzip -o oic.zip; \
     unzip -o sdk.zip; \
