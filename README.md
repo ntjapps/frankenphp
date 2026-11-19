@@ -71,4 +71,4 @@ Built by `image-build.yaml` from [`docker-extra/Dockerfile`](docker-extra/Docker
 
 ## Updates
 
-28 Sep 2026
+20 Nov 2026
