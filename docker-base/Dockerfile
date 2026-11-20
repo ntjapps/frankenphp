@@ -14,12 +14,12 @@
 # =============================================================================
 # Base images are pinned by digest (multi-arch index digests; `docker buildx imagetools inspect <image>`, copy the top-level
 # "Digest:"). Dependabot (docker, target dev) opens PRs when they move. Keep builder, runtime and PHP_VERSION in step.
-FROM dunglas/frankenphp:1-builder-php8.5@sha256:03689f65a8c0977115e2bc5aff0c82db4c9a269a73528ebbbb069a79c706767b AS php-recompile
+FROM dunglas/frankenphp:1-builder-php8.5@sha256:4f48bda9191c190121dc938c81981a44b9047db02917140533752aea8759cb58 AS php-recompile
 
 # PHP version must match the prebuilt binary in the base image exactly.
 # Update this ARG when bumping the base image tag.
-ARG PHP_VERSION=8.5.12
-ARG PHP_SHA256="08bc2eba2a588654ade1357174aa646b761556c862dda0678345ee29ed481209"
+ARG PHP_VERSION=8.5.13
+ARG PHP_SHA256="607602acaf0c3061818e9916ec44a058e8b3d43959a83862b9cd3ec7bf5b785f"
 
 # FD_SETSIZE value. 8192 is large enough for high-concurrency FrankenPHP worker
 # deployments while staying well within kernel ulimit defaults.
@@ -149,7 +149,7 @@ RUN set -eux; \
 # Stage 3: Runtime image — standard dunglas/frankenphp with the patched binary
 #           and libphp.so replaced. PHP extensions are installed as before.
 # =============================================================================
-FROM dunglas/frankenphp:1-php8.5@sha256:667c5fffd348d9c3c260803d75956f1d9aace7e4b7331d8893de6f101d7e0e57
+FROM dunglas/frankenphp:1-php8.5@sha256:17ff6554ba6de527d17aa5ec37e2a3bc3b182d7dbea9362f9a02eb5b4a1c4b95
 
 # Replace the prebuilt frankenphp binary and libphp.so with the
 # FD_SETSIZE=8192 variants built in the stages above.
